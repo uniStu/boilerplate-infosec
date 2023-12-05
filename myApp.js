@@ -46,7 +46,7 @@ app.use(
 );
 
 const bcrypt = require('bcrypt');
-const saltRounds = 10; // Use a suitable number of rounds
+const saltRounds = 12; // Use a suitable number of rounds
 
 // Asynchronous hashing function
 bcrypt.hash('passw0rd!', saltRounds, (err, hash) => {
