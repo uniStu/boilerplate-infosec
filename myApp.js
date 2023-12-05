@@ -46,30 +46,20 @@ app.use(
   })
 );
 
-// Understand BCrypt hashes
-const saltRounds = 10;
-const myPlaintextPassword = 's0/\/\P4$$w0rD';
-bcrypt.genSalt(saltRounds, (err, salt) => {
-  bcrypt.hash(myPlaintextPassword, salt, (err, hash) => {
-    // Store hash in your password DB.
-    bcrypt.compare(myPlaintextPassword, hash, (err, result) => {
-      // result == true
-    });
+const bcrypt = require('bcrypt');
+const saltRounds = 10; // Use a suitable number of rounds
+
+// Asynchronous hashing function
+bcrypt.hash('passw0rd!', saltRounds, (err, hash) => {
+  console.log(hash); // Print the generated hash
+  // Store the hash in your database or perform other actions with it
+  // Example: saveHashToDatabase(hash);
+  
+  // Compare a plaintext password with the generated hash
+  bcrypt.compare('passw0rd!', hash, (err, res) => {
+    console.log(res); // Print 'true' or 'false' based on comparison
   });
 });
-
-// Hash and compare passwords asynchronously
-async function hashAndComparePasswords() {
-  const salt = await bcrypt.genSalt(saltRounds);
-  const hash = await bcrypt.hash(myPlaintextPassword, salt);
-  const result = await bcrypt.compare(myPlaintextPassword, hash);
-  // result == true
-}
-
-// Hash and compare passwords synchronously
-const hash = bcrypt.hashSync(myPlaintextPassword, saltRounds);
-const result = bcrypt.compareSync(myPlaintextPassword, hash);
-// result == true
 
 
 
