@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const bcrypt = require('bcrypt');
 const helmet = require('helmet');
 
 // Install and require Helmet
@@ -45,7 +46,6 @@ app.use(
   })
 );
 
-const bcrypt = require('bcrypt');
 const saltRounds = 12; // Use a suitable number of rounds
 
 // Asynchronous hashing function
