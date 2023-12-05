@@ -8,9 +8,7 @@ var app = express();
 app.disable("x-powered-by");
 var fs = require("fs");
 var path = require("path");
-var bcrypt = require('bcrypt'); // Adding BCrypt
 
-// Existing middleware...
 app.use(function (req, res, next) {
   res.set({
     "Access-Control-Allow-Origin": "*",
@@ -21,23 +19,51 @@ app.use(function (req, res, next) {
   next();
 });
 
-// BCrypt usage examples
-const saltRounds = 10;
-const myPlaintextPassword = 's0/\/\P4$$w0rD';
-
-bcrypt.genSalt(saltRounds, (err, salt) => {
-  bcrypt.hash(myPlaintextPassword, salt, (err, hash) => {
-    // Store hash in your password DB.
-    bcrypt.compare(myPlaintextPassword, hash, (err, result) => {
-      // result == true
-    });
+app.get("/file/*?", function (req, res, next) {
+  if (req.params[0] === ".env") {
+    return next({ status: 401, message: "ACCESS DENIED" });
+  }
+  fs.readFile(path.join(__dirname, req.params[0]), function (err, data) {
+    if (err) {
+      return next(err);
+    }
+    res.type("txt").send(data.toString());
   });
 });
 
-const hash = bcrypt.hashSync(myPlaintextPassword, saltRounds);
-const result = bcrypt.compareSync(myPlaintextPassword, hash);
+var main = require("./myApp.js");
+app.get("/app-info", function (req, res) {
+  // list middlewares mounted on the '/' camper's app
+  var appMainRouteStack = main._router.stack
+    .filter((s) => s.path === "")
+    .map((l) => l.name)
+    // filter out express default middlewares
+    .filter(
+      (n) => !(n === "query" || n === "expressInit" || n === "serveStatic")
+    );
 
-// More existing middleware...
+  // filter out CORS Headers
+  var hs = Object.keys(res.getHeaders()).filter(
+    (h) => !h.match(/^access-control-\w+/)
+  );
+  var hObj = {};
+  hs.forEach((h) => {
+    hObj[h] = res.getHeaders()[h];
+  });
+  delete res.get("strict-transport-security");
+  res.json({ headers: hObj, appStack: appMainRouteStack });
+});
+
+app.get("/package.json", function (req, res, next) {
+  fs.readFile(__dirname + "/package.json", function (err, data) {
+    if (err) return next(err);
+    res.type("txt").send(data.toString());
+  });
+});
+
+app.use(function (req, res, next) {
+  res.status(404).type("txt").send("Not Found");
+});
 
 module.exports = app;
 
