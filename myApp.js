@@ -1,7 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const bcrypt = require('bcrypt');
-const PORT = process.env.PORT || 3070;
+const PORT = process.env.PORT || 9070;
 
 const app = express();
 
