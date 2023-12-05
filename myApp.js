@@ -39,10 +39,9 @@ app.use(helmet.noCache());
 // Set a Content Security Policy
 app.use(
   helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", 'maxcdn.bootstrapcdn.com'],
-      scriptSrc: ["'self'", 'trusted-cdn.com'],
+     directives: {
+      defaultSrc: ["'self'"], // Allow resources from the same origin
+      scriptSrc: ["'self'", 'trusted-cdn.com'], // Allow scripts from the same origin and trusted-cdn.com
     },
   })
 );
