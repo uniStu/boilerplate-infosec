@@ -42,7 +42,7 @@ app.use(
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", 'maxcdn.bootstrapcdn.com'],
-      scriptSrc: ["'self'", 'code.jquery.com'],
+      scriptSrc: ["'self'", 'trusted-cdn.com'],
     },
   })
 );
