@@ -1,6 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const bcrypt = require('bcrypt');
+const PORT = process.env.PORT || 3030;
 
 const app = express();
 
@@ -86,7 +87,6 @@ const result = bcrypt.compareSync(myPlaintextPassword, hash);
 
 // ...other middleware and routes
 
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
